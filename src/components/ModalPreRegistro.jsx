@@ -232,7 +232,7 @@ const ModalPreRegistro = ({ open, onClose }) => {
           {/* ReCAPTCHA */}
           <Box mt={3} display="flex" justifyContent="center">
             <ReCAPTCHA
-              sitekey="6Lda_isrAAAAANQVcn_agfRyTCOBwkDVxjlfrpdU" // ← reemplaza con tu clave pública real
+              sitekey="6LcCiC8rAAAAAEz-52pmoQgeuoJDdKnIK9QikqcV" // ← reemplaza con tu clave pública real
               onChange={(token) => setRecaptchaToken(token)}
               theme="dark"
             />
