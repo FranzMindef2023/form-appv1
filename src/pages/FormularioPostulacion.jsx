@@ -5,27 +5,27 @@ import {
   Container,
   TextField,
   Typography,
-  IconButton,
-  InputAdornment,
   Link,
-  Divider,
-  Grid
+  Divider
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { styled } from '@mui/system';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ModalPreRegistro from '../components/ModalPreRegistro';
 
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 const Background = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
+  position: 'relative',
   minHeight: '100vh',
   width: '100vw',
+  overflow: 'hidden',
   backgroundColor: '#191c1f',
   color: '#FAFBFC',
-  overflowY: 'auto',
-  overflowX: 'clip',
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column'
   }
@@ -37,9 +37,8 @@ const LoginBox = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   backgroundColor: '#191c1f',
-  color: '#FAFBFC',
   padding: '2rem 1rem',
-  borderRadius: '0',
+  zIndex: 2,
   [theme.breakpoints.up('md')]: {
     maxWidth: '400px',
     padding: '2.5rem'
@@ -48,15 +47,30 @@ const LoginBox = styled(Box)(({ theme }) => ({
 
 const ImageSide = styled('div')(({ theme }) => ({
   flex: '1 1 75%',
+  minHeight: '100vh',
   backgroundImage: 'url(https://sso.hotmart.com/themes/hotmart-custom/images/fire.jpg)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
-  minHeight: '100vh',
+  zIndex: 1,
   [theme.breakpoints.down('md')]: {
     display: 'none'
   }
 }));
+
+const SliderOverlay = styled('div')({
+  position: 'absolute',
+  top: 0,
+  left: '25%',
+  right: 0,
+  bottom: 0,
+  zIndex: 3,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  pointerEvents: 'none',
+  padding: '2rem'
+});
 
 const SocialButton = styled(Button)({
   flex: 1,
@@ -68,7 +82,6 @@ const SocialButton = styled(Button)({
 });
 
 const FormularioPostulacion = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
   const formik = useFormik({
@@ -86,9 +99,19 @@ const FormularioPostulacion = () => {
     }
   });
 
-  const toUpper = (e) => {
-    const value = e.target.value.toUpperCase();
-    formik.setFieldValue(e.target.name, value);
+  const sliderVideos = [
+    'https://www.youtube.com/embed/NhNC_-ukn7Y',
+    'https://www.youtube.com/embed/vmsW8uJLNc8',
+    'https://www.youtube.com/embed/nhf6rWnKFbw'
+  ];
+
+  const sliderSettings = {
+    autoplay: true,
+    autoplaySpeed: 6000,
+    infinite: true,
+    arrows: false,
+    dots: false,
+    pauseOnHover: false
   };
 
   return (
@@ -116,14 +139,17 @@ const FormularioPostulacion = () => {
             <SocialButton startIcon={<img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" width="18" />}>Facebook</SocialButton>
             <SocialButton startIcon={<img src="https://www.svgrepo.com/show/13671/youtube.svg" width="18" />}>Youtube</SocialButton>
           </Box>
+
           <Box display="flex" gap={2} mb={3} flexWrap="wrap" justifyContent="center">
             <SocialButton startIcon={<img src="https://www.svgrepo.com/show/431991/tiktok.svg" width="18" />}>Tik Tok</SocialButton>
             <SocialButton startIcon={<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="18" />}>WhatsApp</SocialButton>
           </Box>
+
           <Box display="flex" gap={2} mb={3} flexWrap="wrap" justifyContent="center">
             <SocialButton startIcon={<img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" width="18" />}>Apple</SocialButton>
             <SocialButton startIcon={<img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="18" />}>Google</SocialButton>
           </Box>
+
           <Button
             type="button"
             fullWidth
@@ -131,29 +157,65 @@ const FormularioPostulacion = () => {
             variant="contained"
             sx={{
               width: '100%',
-              backgroundColor: '#F4511E', // 🎯 Color del botón de la imagen
+              backgroundColor: '#F4511E',
               color: '#fff',
-              borderRadius: 9999, // para bordes completamente redondos
+              borderRadius: 9999,
               fontWeight: 'bold',
               py: 1.5,
-              '&:hover': { backgroundColor: '#e64a19' } // tono más oscuro al pasar el mouse
+              '&:hover': { backgroundColor: '#e64a19' }
             }}
           >
             Regístrate
           </Button>
+
           <Box mt={6} textAlign="center" fontSize="12px" color="#777">
             <Divider sx={{ backgroundColor: '#333', my: 2 }} />
             <Typography variant="caption" display="block">
               Soporte — Términos de Uso — Política de Privacidad
             </Typography>
             <Typography variant="caption" display="block">
-              Desarrollado por <strong>Unidad de Sistemas e Informatica Ministerio de Defensa</strong>
+              Desarrollado por <strong>Unidad de Sistemas e Informática Ministerio de Defensa</strong>
             </Typography>
           </Box>
         </Container>
       </LoginBox>
 
       <ImageSide />
+
+      {/* Carrusel de videos */}
+      <SliderOverlay>
+        <Box sx={{ width: '90%', maxWidth: 720 }}>
+          <Slider {...sliderSettings}>
+            {sliderVideos.map((url, idx) => (
+              <Box
+                key={idx}
+                sx={{
+                  position: 'relative',
+                  paddingTop: '56.25%', // 16:9 aspect ratio
+                  borderRadius: 8,
+                  overflow: 'hidden',
+                  boxShadow: '0 0 10px #000'
+                }}
+              >
+                <iframe
+                  src={url}
+                  title={`Video institucional ${idx + 1}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%'
+                  }}
+                />
+              </Box>
+            ))}
+          </Slider>
+        </Box>
+      </SliderOverlay>
 
       <ModalPreRegistro open={openModal} onClose={() => setOpenModal(false)} />
     </Background>
